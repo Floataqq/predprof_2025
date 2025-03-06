@@ -3,12 +3,12 @@ from flask import Flask, render_template, session, request, redirect, url_for, f
 app = Flask(__name__)
 
 @app.errorhandler(404)
-def not_found(e):
+def not_found_404(e):
     return render_template("404.html", user = 1)
 
 
 @app.errorhandler(500)
-def not_found(e):
+def not_found_500(e):
     return render_template("500.html", user = 1)
 
 @app.route('/')
