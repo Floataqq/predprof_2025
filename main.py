@@ -3,6 +3,11 @@ from itsdangerous import URLSafeTimedSerializer, SignatureExpired, BadTimeSignat
 from flask_mail import Mail, Message
 import os
 from __init__db import User
+from test_db_func import add_user, is_existing, is_confirmed, set_confirmed
+from dotenv import load_dotenv
+from backend import send_msg
+load_dotenv()
+
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
@@ -13,11 +18,12 @@ app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
 app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
 app.config['MAIL_DEFAULT_SENDER'] = 'noreply@example.com'
-app = Flask(__name__)
+
 
 mail = Mail(app)
 
 # Инициализация сериализатора для токенов
+print(app.config['SECRET_KEY'])
 serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
 
 @app.errorhandler(404)
@@ -45,12 +51,29 @@ def dashboard():
     }
     return render_template('profile.html', user = user)
 
-@app.route('/sign-in')
+@app.route('/sign-in', methods=['GET', 'POST'])
 def sign_in():
     return render_template('sign-in.html', user = 1)
 
-@app.route('/sign-up')
+@app.route('/sign-up', methods=['GET', 'POST'])
 def sign_up():
+    if request.method == 'POST':
+        email = request.form['email']
+        if is_existing(email):
+             flash('Email уже зарегистрирован')
+             return redirect(url_for('sign_up'))
+        #Сделать проверку, вдруг пользователь зареган
+        add_user(request.form)
+        # Генерация токена подтверждения
+        token = serializer.dumps(email, salt='email-confirm')
+
+        # Отправка письма
+        msg = Message('Подтверждение email', recipients=[email])
+        confirm_url = url_for('confirm_email', token=token, _external=True)
+        msg.body = f'Для подтверждения аккаунта перейдите по ссылке: {confirm_url}'
+        mail.send(msg)
+        flash('Письмо с подтверждением отправлено на вашу почту')
+
     return render_template('sign-up.html', user = 1)
 
 @app.route('/confirm/<token>')
@@ -60,19 +83,18 @@ def confirm_email(token):
         email = serializer.loads(token, salt='email-confirm', max_age=86400)
     except (SignatureExpired, BadTimeSignature):
         flash('Ссылка подтверждения истекла или неверна')
-        return redirect(url_for('sign-up'))
+        return redirect(url_for('sign_in'))
 
-    user = User.query.filter_by(email=email).first()
-    if user:
-        if user.confirmed:
-            flash('Аккаунт уже подтвержден')
-        else:
-            user.confirmed = True
-            flash('Аккаунт успешно подтвержден!')
+    if is_existing(email):
+       if is_confirmed(email):
+           flash('Аккаунт уже подтвержден')
+       else:
+           set_confirmed(email)
+           flash('Аккаунт успешно подтвержден!')
     else:
-        flash('Пользователь не найден')
+       flash('Пользователь не найден')
 
-    return redirect(url_for('sign-in'))
+    return redirect(url_for('sign_in'))
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)

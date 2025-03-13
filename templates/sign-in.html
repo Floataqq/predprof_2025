@@ -88,6 +88,9 @@
     .back-button svg {
       margin-right: 5px;
     }
+    .alert {
+        color: red;
+    }
   </style>
 </head>
 
@@ -125,6 +128,13 @@
 <!--            <p class="btn-text"><b>Sign in with google</b></p>-->
 <!--          </a>-->
           <!-- Submit button -->
+          {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
           <div class="button" style="width: 100%; margin: 0.5em 10%;">
             <input type="submit" value="Войти">
           </div>
