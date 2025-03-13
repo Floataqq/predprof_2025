@@ -34,3 +34,12 @@ class User(Base):
 
 Base.metadata.create_all(engine)
 
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+# Функция для получения сессии
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()

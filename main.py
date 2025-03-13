@@ -3,9 +3,9 @@ from itsdangerous import URLSafeTimedSerializer, SignatureExpired, BadTimeSignat
 from flask_mail import Mail, Message
 import os
 from __init__db import User
-from test_db_func import add_user, is_existing, is_confirmed, set_confirmed
+from db_functions import add_user, is_existing, is_confirmed, set_confirmed
 from dotenv import load_dotenv
-from backend import send_msg
+# from backend import send_msg
 load_dotenv()
 
 app = Flask(__name__)
@@ -23,7 +23,7 @@ app.config['MAIL_DEFAULT_SENDER'] = 'noreply@example.com'
 mail = Mail(app)
 
 # Инициализация сериализатора для токенов
-print(app.config['SECRET_KEY'])
+print(os.getenv('SECRET_KEY'))
 serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
 
 @app.errorhandler(404)
