@@ -87,7 +87,9 @@
     .back-button svg {
       margin-right: 5px;
     }
-
+    .alert {
+        color: red;
+    }
     </style>
 </head>
 <body>
@@ -103,7 +105,7 @@
     <div class="title">Регистрация</div>
     <div class="content">
       <!-- Registration form -->
-      <form action="#" method="post">
+      <form action="{{ url_for('sign_up') }}" method="post">
         <div class="user-details">
           <!-- Input for Full Name -->
           <div class="input-box">
@@ -163,6 +165,13 @@
 	    </span>
           </div>
         </fieldset>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
         <!-- Оаус -->
 <!--        <a href="/login" class="google-btn">-->
 <!--          <div class="google-icon-wrapper">-->
@@ -172,10 +181,13 @@
 <!--          <p class="btn-text"><b>Sign in with google</b></p>-->
 <!--        </a>-->
         <!-- Submit button -->
+
         <div class="button">
           <input type="submit" value="Зарегистрироваться">
         </div>
-
+        <div class="login-link">
+            Уже есть аккаунт? <a href="{{ url_for('sign_in') }}">Войти</a>
+        </div>
       </form>
     </div>
   </div>

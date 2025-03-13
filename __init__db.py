@@ -6,9 +6,9 @@ import os
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
-if os.path.exists("Database.db"):
-    print("\u001b[35;1m Killed all goidas \u001b[0m")
-    os.remove("Database.db")
+# if os.path.exists("Database.db"):
+#     print("\u001b[35;1m Killed all goidas \u001b[0m")
+#     os.remove("Database.db")
 
 database_url = 'sqlite:///Database.db'
 engine = create_engine(database_url)
@@ -34,16 +34,3 @@ class User(Base):
 
 Base.metadata.create_all(engine)
 
-Session = sessionmaker(bind=engine)
-session = Session()
-
-new_user = User(
-    first_name='admin',
-    email='admin@admin.com',
-    set_password='123',
-    is_admin=True
-)
-
-session.add(new_user)
-session.commit()
-session.close()
