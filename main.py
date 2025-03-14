@@ -122,5 +122,12 @@ def confirm_email(token):
 
     return redirect(url_for('sign_in'))
 
+@app.route("/logout/")
+def logout():
+    if "email" in session:
+        del session["email"]
+    return redirect("/")
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
