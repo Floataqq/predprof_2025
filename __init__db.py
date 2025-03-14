@@ -6,9 +6,9 @@ import os
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
-# if os.path.exists("Database.db"):
-#     print("\u001b[35;1m Killed all goidas \u001b[0m")
-#     os.remove("Database.db")
+if os.path.exists("Database.db"):
+    print("\u001b[35;1m Killed all goidas \u001b[0m")
+    os.remove("Database.db")
 
 database_url = 'sqlite:///Database.db'
 engine = create_engine(database_url)

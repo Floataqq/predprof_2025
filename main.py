@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, session
 from itsdangerous import URLSafeTimedSerializer, SignatureExpired, BadTimeSignature
 from flask_mail import Mail, Message
 import os
@@ -35,9 +35,21 @@ def not_found_404(e):
 def not_found_500(e):
     return render_template("500.html", user = 1)
 
+def auth(route):
+    def inner(*args, **kwargs):
+        if "email" in session:
+            return route(*args, **kwargs)
+        else:
+            return redirect("/sign-in/")
+    return inner
+
 @app.route('/')
 def index():
-    return render_template('main.html', user = 1)
+    if "email" in session:
+        user = 1
+    else:
+        user = 0
+    return render_template('main.html', user = user)
 
 @app.route('/dashboard')
 def dashboard():
@@ -58,6 +70,7 @@ def sign_in():
         password = request.form['password']
         if is_existing(email):
             if is_password_correct(email,password):
+                session["email"] = email
                 return redirect(url_for('index'))
             else:
                 flash('Неправильный пароль')
@@ -65,7 +78,8 @@ def sign_in():
         else:
             flash('Неправильный логин или пароль')
             return redirect(url_for('sign_in'))
-    return render_template('sign-in.html', user = 1)
+
+    return render_template('sign-in.html')
 
 @app.route('/sign-up', methods=['GET', 'POST'])
 def sign_up():
