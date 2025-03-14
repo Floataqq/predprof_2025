@@ -94,9 +94,9 @@ def sign_up():
         token = serializer.dumps(email, salt='email-confirm')
 
         # Отправка письма
-        msg = Message('Подтверждение email', recipients=[email])
+        msg = Message('Подтверждение регистрации на сайте', recipients=[email])
         confirm_url = url_for('confirm_email', token=token, _external=True)
-        msg.body = f'Для подтверждения аккаунта перейдите по ссылке: {confirm_url}'
+        msg.html = render_template('email_confirmation.html', confirm_url=confirm_url)
         mail.send(msg)
         flash('Письмо с подтверждением отправлено на вашу почту')
 
