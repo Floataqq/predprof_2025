@@ -3,9 +3,9 @@ from itsdangerous import URLSafeTimedSerializer, SignatureExpired, BadTimeSignat
 from flask_mail import Mail, Message
 import os
 from __init__db import User
-from db_functions import add_user, is_existing, is_confirmed, set_confirmed
+from db_functions import add_user, is_existing, is_confirmed, set_confirmed, is_password_correct
 from dotenv import load_dotenv
-# from backend import send_msg
+
 load_dotenv()
 
 app = Flask(__name__)
@@ -23,7 +23,7 @@ app.config['MAIL_DEFAULT_SENDER'] = 'noreply@example.com'
 mail = Mail(app)
 
 # Инициализация сериализатора для токенов
-print(os.getenv('SECRET_KEY'))
+print(app.config['SECRET_KEY'])
 serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
 
 @app.errorhandler(404)
@@ -53,6 +53,18 @@ def dashboard():
 
 @app.route('/sign-in', methods=['GET', 'POST'])
 def sign_in():
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        if is_existing(email):
+            if is_password_correct(email,password):
+                return redirect(url_for('index'))
+            else:
+                flash('Неправильный пароль')
+                return redirect(url_for('sign_in'))
+        else:
+            flash('Неправильный логин или пароль')
+            return redirect(url_for('sign_in'))
     return render_template('sign-in.html', user = 1)
 
 @app.route('/sign-up', methods=['GET', 'POST'])
