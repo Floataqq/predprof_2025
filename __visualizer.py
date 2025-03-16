@@ -1,5 +1,6 @@
 import numpy as np
 from PIL import Image
+import json
 def visualize(arr: list[list[int]], name: str) -> str:
     """Функция, которая возвращает картинку.
 
@@ -17,6 +18,10 @@ def visualize(arr: list[list[int]], name: str) -> str:
     image = Image.fromarray(data)      # Create a PIL image
     image.save(f"images/{name}.png")
     image.show()
+    
+
 if __name__ == "__main__":
-    YOUR_MOTHER = []
-    visualize(YOUR_MOTHER, "your_mother")
+    file = open("dump.txt").readlines()
+    for x in range(16):
+        e = json.loads(file[x])
+        visualize(e["message"]["data"], f"{x}")
