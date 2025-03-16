@@ -157,8 +157,6 @@ def getversh(x1,y1,x2,y2,a,b):
                         y3=y4
         if x3!=x2 or y3!=y2:
             ans.append([[x3,y3],1])
-        if u==64:
-            u=128
         x1=x3
         y1=y3
 
