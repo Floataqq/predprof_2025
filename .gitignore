@@ -5,3 +5,4 @@ __pycache__/
 test_server.py
 forum.db
 test.ipynb
+*.db
