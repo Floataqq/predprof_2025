@@ -34,11 +34,11 @@ function normalize(c, factor) {
 function place_tile(x, y, height) {
   const geometry = new THREE.BoxGeometry( 1, 5 * height / 255, 1 );
   geometry.translate(x, 5 * height / 255 / 2, y);
-  tiles.push(geometry);
-  // const color = normalize(0xdb, height) * 0x10000 + normalize(0x42, height) * 0x100 + normalize(0x2c, height);
-  // const material = new THREE.MeshNormalMaterial();//new THREE.MeshBasicMaterial( { color } );
-  // const tile = new THREE.Mesh( geometry, material );
-  // scene.add(tile);
+  // tiles.push(geometry);
+  const color = normalize(0xdb, height) * 0x10000 + normalize(0x42, height) * 0x100 + normalize(0x2c, height);
+  const material = new THREE.MeshBasicMaterial( { color } );
+  const tile = new THREE.Mesh( geometry, material );
+  scene.add(tile);
 }
 
 function animate() {
@@ -46,14 +46,30 @@ function animate() {
   renderer.render(scene, camera);
 }
 
-const data = await get_data();
+const api_data = await get_data();
+let data = [];
+for (let e in api_data) {
+  let block = api_data[e]['message']['data'];
+  let new_block = [];
+  for (let j = 0; j < 64; j+=2) {
+    let new_row = [];
+    for (let k = 0; k < 64; k+=2) {
+      new_row.push(block[j][k]);
+    }
+    new_block.push(new_row);
+  }
+  data.push(new_block);
+}
+
+console.log(data);
+
 let block_x = 0, block_y = 0;
 for (let block in data) {
   let y = 0;
-  for (let row of data[block]['message']['data']) {
+  for (let row of data[block]) {
     let x = 0;
     for (let height of row) {
-      place_tile(block_x * 64 + x, block_y * 64 + y, height);
+      place_tile(block_x * 32 + x, block_y * 32 + y, height);
       x++;
     }
     y++;
@@ -62,9 +78,9 @@ for (let block in data) {
   if (block_x % 4 == 0) { block_y += 1; block_x = 0; }
 }
 
-const geom = BufferGeometryUtils.mergeGeometries(tiles);
-const material = new THREE.MeshNormalMaterial();
-scene.add(new THREE.Mesh(geom, material));
+// const geom = BufferGeometryUtils.mergeGeometries(tiles);
+// const material = new THREE.MeshNormalMaterial();
+// scene.add(new THREE.Mesh(geom, material));
 
 renderer.setAnimationLoop(animate);
 
