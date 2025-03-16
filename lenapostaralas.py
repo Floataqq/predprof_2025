@@ -162,10 +162,7 @@ def getversh(x1,y1,x2,y2,a,b,v):
     u=64
     while x1!=x2 or y1!=y2:
         a=jkl(x1,y1,x2,y2,v,64)
-        if p(a[0],a[1],x1,x2)<=32:
-            ans.append([a, 0])
-        else:
-            ans.append([a, 1])
+        ans.append([a,1])
 
 
     return ans
