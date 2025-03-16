@@ -3,7 +3,7 @@ import hashlib
 
 base_url = "https://olimp.miet.ru/ppo_it/api"
 
-with open("dump.txt", 'w+') as f:
+with open("dump.txt", 'w+', encoding='utf8') as f:
     tiles = set()
     while len(tiles) < 16:
         resp = requests.get(base_url)
