@@ -1,11 +1,13 @@
+import json
 from flask import Flask, render_template, request, redirect, url_for, flash, session
-from itsdangerous import URLSafeTimedSerializer, SignatureExpired, BadTimeSignature
-from flask_mail import Mail, Message
-import os
 from __init__db import User
 from db_functions import add_user, is_existing, is_confirmed, set_confirmed, is_password_correct
+from dumper import dumper
+from backend import visualise
 
 app = Flask(__name__)
+api_url = "https://olimp.miet.ru/ppo_it/api"
+
 
 @app.errorhandler(404)
 def not_found_404(e):
@@ -16,8 +18,18 @@ def not_found_404(e):
 def not_found_500(e):
     return render_template("500.html", user = 1)
 
+@app.route('/', methods=["GET", "POST"])
+@app.route('/3d', methods=["GET", "POST"])
 def index():
-    return render_template('main.html')
+    if request.method == "POST":
+        api_url = request.form["api_url"]
+        visualise(api_url)
+    return render_template("3d.html")
+
+@app.route("/data")
+def give_tiles():
+    with open("dump.txt", 'r') as f:
+        return [json.loads(i) for i in f.readlines()]
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)

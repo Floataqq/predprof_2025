@@ -10,8 +10,5 @@ def threed():
     return render_template("3d.html")
 
 
-@app.route("/data")
-def give_tiles():
-    with open("dump.txt", 'r') as f:
-        return [json.loads(i) for i in f.readlines()]
+def visualise(api_url):
         
