@@ -1,10 +1,11 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
+from itsdangerous import URLSafeTimedSerializer, SignatureExpired, BadTimeSignature
+from flask_mail import Mail, Message
 import os
 from __init__db import User
 from db_functions import add_user, is_existing, is_confirmed, set_confirmed, is_password_correct
 
-
-app = Flask()
+app = Flask(__name__)
 
 @app.errorhandler(404)
 def not_found_404(e):
@@ -15,10 +16,8 @@ def not_found_404(e):
 def not_found_500(e):
     return render_template("500.html", user = 1)
 
-@app.route('/')
 def index():
-    return render_template('main.html', user = user)
-
+    return render_template('main.html')
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
