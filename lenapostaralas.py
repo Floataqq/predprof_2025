@@ -149,12 +149,13 @@ def getversh(x1,y1,x2,y2,a,b,v):
         y3=y1
         for i in range(-u,u+1):
             for j in range(-u,u+1):
-                if (i*i+j*j+v[i+x1][j+y1]*v[i+x1][j+y1])**0.5<=64:
-                    x4=i+x1
-                    y4=j+y1
-                    if p(x4,y4,x2,y2)<=p(x3,y3,x2,y2):
-                        x3=x4
-                        y3=y4
+                if 0<=x1+i<256 and 0<=y1+j<256:
+                    if (i*i+j*j+v[i+x1][j+y1]*v[i+x1][j+y1])**0.5<=64:
+                        x4=i+x1
+                        y4=j+y1
+                        if p(x4,y4,x2,y2)<=p(x3,y3,x2,y2):
+                            x3=x4
+                            y3=y4
         if x3!=x2 or y3!=y2:
             ans.append([[x3,y3],1])
         x1=x3
