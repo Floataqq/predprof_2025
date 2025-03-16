@@ -3,18 +3,25 @@ import { MapControls } from 'three/addons/controls/MapControls.js';
 import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-const api = {
+let api = {
   show_modules: false,
   show_stations: false,
   show_spheres: false,
 };
 
-let modules = [], stations = [];
+let modules = [], stations = [], api_data = [];
 
 let gui = new GUI();
 gui.add(api, 'show_modules')
   .name('Show research modules')
-  .onChange(
+  .onChange((v) => api.show_modules = v);
+gui.add(api, 'show_stations')
+  .name('Show base stations')
+  .onChange((v) => api.show_stations = v);
+gui.add(api, 'show_spheres')
+  .name('Show base stations\' radiuses')
+  .onChange((v) => api.show_spheres = v);
+gui.onChange((_) => initMesh(api));
 
 async function get_data() {
   const json_data = await fetch('/data');
@@ -22,7 +29,7 @@ async function get_data() {
   return data;
 }
 
-async function get_stations() {
+async function get_modules() {
   const json_data = await fetch('/coords');
   const data = await json_data.json();
   return [data.sender, data.listener];
@@ -60,13 +67,23 @@ function place_tile(x, y, height) {
   scene.add(tile);
 }
 
+function place_module(x, y, height) {
+  const geometry = new THREE.BoxGeometry( 1, 2.75, 1 );
+  geometry.translate(x, 5 * height / 255, y);
+  const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 });
+  const tile = new THREE.Mesh(geometry, material);
+  scene.add(tile);
+}
+
 function animate() {
   controls.update();
   renderer.render(scene, camera);
 }
 
-function initMesh() {
-  const api_data = await get_data();
+api_data = await get_data();
+modules = await get_modules();
+function initMesh(options) {
+  console.log(options);
   let data = [];
   for (let e in api_data) {
     let block = api_data[e]['message']['data'];
@@ -80,7 +97,7 @@ function initMesh() {
     }
     data.push(new_block);
   }
-
+  
   let block_x = 0, block_y = 0;
   for (let block in data) {
     let y = 0;
@@ -95,9 +112,16 @@ function initMesh() {
     block_x++;
     if (block_x % 4 == 0) { block_y += 1; block_x = 0; }
   }
+
+  if(options.show_modules) {
+    for(let [x,y] of modules) {
+      let xx = Math.floor(x / 2), yy = Math.floor(y / 2);
+      place_module(xx, yy, data[Math.floor(xx / 32) + Math.floor(yy / 32) * 4][yy % 32][xx % 32]);
+    }
+  }
 }
 
-initMesh();
+initMesh(api);
 renderer.setAnimationLoop(animate);
 
 function onWindowResize() {
