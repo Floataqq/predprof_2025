@@ -7,9 +7,13 @@ def lol(i,j,v,used,ans,ioi,op):
                 for jkl in range(64):
                     cnt+=abs(v[ans[i][j]][jkl][-1]-v[ans[i][j+1]][jkl][0])
                     cnt+=abs(v[ans[j][i]][-1][jkl]-v[ans[j+1][i]][0][jkl])
+        print(op, cnt, ans, ioi)
         if cnt<op:
-            ioi=ans
+            for i in range(4):
+                for j in range(4):
+                    ioi[i][j]=ans[i][j]
             op=cnt
+
         return op
     i1=i
     j1=j+1
@@ -129,7 +133,7 @@ def get(v):
         cnt1 -= abs(v[ans[3][-1]][0][i] - v[ans[1][-1]][-1][i])
     if cnt1 > 0:
         ans[2][-1], ans[1][-1] = ans[1][-1], ans[2][-1]
-    goodans=ans
+    goodans=[[0 for _ in range(4)] for __ in range(4)]
     cnt=1000000000000000
     lol(1,1,v,used,ans,goodans,cnt)
     return goodans
