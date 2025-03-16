@@ -1,4 +1,5 @@
 from __init__db import *
+import json
 
 
 def add_station(x: int, y: int, price: int, radius: int) -> None:
@@ -40,32 +41,18 @@ def add_tile1(string_value: str, num: int) -> int:
     session.add(new_tile)
     session.commit()
     cur_id = session.query(tile).filter_by(num=num).first().id
-    return cur_id
-
-def add_tile2(string_value: str, num: int) -> int:
-    """
-    :param string_value: str
-    :param num: int
-    :return: id_of_current: int
-    """
-    session = next(get_db())
-    new_tile = tile(
-        num=num,
-        json=string_value
-    )
-    session.add(new_tile)
-    session.commit()
-    cur_id = session.query(tile).filter(num=num).first().id
-    arr = [[int(j) for j in i[1:-1].split(', ')] for i in string_value[1:-1].split('], [')]
-    for i in range(len(arr)):
-        for j in range(len(arr[i])):
-            new_point = point(
-                tile_id=cur_id,
-                num=i * len(arr[i]) + j,
-                mean=arr[i][j]
-            )
-            session.add(new_point)
-    session.commit()
+    if cur_id == cur_id:
+        file = string_value.split('[[')[1].split(']]')[0]
+        arr = [[int(j) for j in i[1:-1].split(',') if j != ''] for i in file.split('],[')]
+        for i in range(len(arr)):
+            for j in range(len(arr[i])):
+                new_point = point(
+                    tile_id=cur_id,
+                    num=i * len(arr[i]) + j,
+                    mean=arr[i][j]
+                )
+                session.add(new_point)
+        session.commit()
     return cur_id
 
 def get_all_tiles() -> list:
@@ -100,8 +87,8 @@ def get_tile2(tile_id: int) -> list:
 def add_base_point(x: int, y: int, is_listener: bool) -> None:
     """
     :param is_listener: bool
-    :param x: int
-    :param y: int
+    :param x: int,
+    :param y: int,
     :return: None
     """
     session = next(get_db())
