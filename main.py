@@ -3,7 +3,7 @@ import api
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 #
 # from db_functions import add_user, is_existing, is_confirmed, set_confirmed, is_password_correct
-from backend import visualise, get_stations
+from backend import visualise, get_stations, do_map
 
 app = Flask(__name__)
 api_url = "https://olimp.miet.ru/ppo_it/api"
@@ -34,8 +34,8 @@ def coords():
 
 @app.route("/data")
 def give_tiles():
-    with open("dump.txt", 'r') as f:
-        return [json.loads(i) for i in f.readlines()]
+    data = do_map()[0]
+    return data
 
 @app.route("/stations")
 def stations():
