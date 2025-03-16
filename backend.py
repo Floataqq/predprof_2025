@@ -31,13 +31,13 @@ def do_map():
     visualizze(arr, "goida")
     return [returnformax, order]
 
-def add_all_riles_to_bd():
+def add_all_tiles_to_bd():
     file = open("dump.txt").readlines()
     order = do_map()[1]
     for i in order:
         add_tile1(file[i], i)
 
-def add_science_p():
+def add_science_points():
+    pass
 
-visualise('https://olimp.miet.ru/ppo_it/api')
-do_map()
+add_all_tiles_to_bd()
