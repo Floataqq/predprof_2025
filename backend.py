@@ -3,7 +3,8 @@ from dumper import dumper
 from __visualizer import visualize, visualizze
 from lenapostaralas import get
 from api import get_coords
-from db_functions import add_tile1
+from db_functions import add_tile1, add_base_point
+from api import get_coords
 
 def visualise(api_url):
     dumper(api_url)
@@ -37,7 +38,11 @@ def add_all_tiles_to_bd():
     for i in order:
         add_tile1(file[i], i)
 
-def add_science_points():
-    pass
+def add_science_points(api_url):
+    data = get_coords(api_url)
+    add_base_point(data["listener"][0], data["listener"][1], 0)
+    add_base_point(data["sender"][0], data["sender"][1], 1)
 
+
+# visualise("https://olimp.miet.ru/ppo_it/api")
 add_all_tiles_to_bd()

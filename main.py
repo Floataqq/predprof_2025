@@ -37,5 +37,17 @@ def give_tiles():
     with open("dump.txt", 'r') as f:
         return [json.loads(i) for i in f.readlines()]
 
+@app.route("/stations")
+def stations():
+    #как-то берем вершины
+    data = []
+    response = []
+    for i in data:
+        d1 = dict()
+        d1["cords"] = data[0]
+        d1["type"] = data[1]
+        response.append(d1)
+    return response
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
