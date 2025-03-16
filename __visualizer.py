@@ -17,7 +17,7 @@ def visualize(arr: list[list[int]], name: str) -> str:
             data[i,j] = [color[0] * (arr[i][j]/255), color[1] * (arr[i][j]/255), color[2] * (arr[i][j]/255)]
     image = Image.fromarray(data)      # Create a PIL image
     image.save(f"images/{name}.png")
-    image.show()
+    # image.show()
 def visualizze(arr: list[list[int]], name: str) -> str:
     """Функция, которая возвращает картинку.
 
@@ -31,7 +31,10 @@ def visualizze(arr: list[list[int]], name: str) -> str:
     data = np.zeros((256,256,3), dtype=np.uint8)
     for i in range(256):
         for j in range(256):
-            data[i,j] = [color[0] * (arr[i][j]/255), color[1] * (arr[i][j]/255), color[2] * (arr[i][j]/255)]
+            if arr[i][j] == -1:
+                data[i][j] = [111,232,220]
+            else:
+                data[i,j] = [color[0] * (arr[i][j]/255), color[1] * (arr[i][j]/255), color[2] * (arr[i][j]/255)]
     image = Image.fromarray(data)      # Create a PIL image
     image.save(f"images/{name}.png")
     image.show()
