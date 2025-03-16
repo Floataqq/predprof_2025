@@ -68,6 +68,13 @@ def add_tile2(string_value: str, num: int) -> int:
     session.commit()
     return cur_id
 
+def get_all_tiles() -> list:
+    """
+    :return: list[tile]
+    """
+    session = next(get_db())
+    return session.query(tile).order_by(tile.num).all()
+
 def get_tile1(tile_id: int) -> tile:
     """
     :param tile_id: int
