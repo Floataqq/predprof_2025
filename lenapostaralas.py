@@ -143,18 +143,23 @@ def p(x1,y1,x2,y2):
 
 def getversh(x1,y1,x2,y2,a,b):
     ans=[]
+    u=64
     while x1!=x2 or y1!=y2:
         x3=x1
         y3=y1
-        for i in range(-64,65):
-            for j in range(-64,65):
-                if (i*i+j*j)**0.5<=64:
+        for i in range(-u,u+1):
+            for j in range(-u,u+1):
+                if p(0,0,i,j)<=64:
                     x4=i+x1
                     y4=j+y1
-                    if p(x1,y1,x4,y4)+p(x4,y4,x2,y2)<=p(x1,y1,x3,y3)+p(x3,y3,x2,y2):
+                    if p(x4,y4,x2,y2)<=p(x3,y3,x2,y2):
                         x3=x4
                         y3=y4
-        ans.append([x3,y3])
+        if x3!=x2 or y3!=y2:
+            ans.append([[x3,y3],1])
+        if u==64:
+            u=128
         x1=x3
         y1=y3
+
     return ans
