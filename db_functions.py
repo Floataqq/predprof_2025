@@ -97,8 +97,9 @@ def get_tile2(tile_id: int) -> list:
     result = [res_tile, res]
     return result
 
-def add_base_point(x: int, y: int) -> None:
+def add_base_point(x: int, y: int, is_listener: bool) -> None:
     """
+    :param is_listener: bool
     :param x: int
     :param y: int
     :return: None
@@ -106,7 +107,8 @@ def add_base_point(x: int, y: int) -> None:
     session = next(get_db())
     new_base_point = base_point(
         x = x,
-        y = y
+        y = y,
+        is_lisener = is_listener
     )
     session.add(new_base_point)
     session.commit()
