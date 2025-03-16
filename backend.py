@@ -1,17 +1,21 @@
-from flask import Flask, render_template
 import json
+from dumper import dumper
+from __visualizer import visualize
+from lenapostaralas import get
 
-app = Flask(__name__)
+def visualise(api_url):
+    dumper(api_url)
+    file = open("dump.txt").readlines()
+    for x in range(16):
+        e = json.loads(file[x])
+        visualize(e["message"]["data"], f"{x}")
 
+def do_map():
+    data = []
+    file = open("dump.txt").readlines()
+    for x in range(16):
+        e = json.loads(file[x])
+        data.append(e["message"]["data"])
+    print(get(data))
 
-@app.route("/")
-@app.route("/3d")
-def threed():
-    return render_template("3d.html")
-
-
-@app.route("/data")
-def give_tiles():
-    with open("dump.txt", 'r') as f:
-        return [json.loads(i) for i in f.readlines()]
-        
+do_map()
