@@ -18,7 +18,24 @@ def visualize(arr: list[list[int]], name: str) -> str:
     image = Image.fromarray(data)      # Create a PIL image
     image.save(f"images/{name}.png")
     image.show()
-    
+def visualizze(arr: list[list[int]], name: str) -> str:
+    """Функция, которая возвращает картинку.
+
+    Args:
+        arr (list[list[int]]): Массив данных из api
+
+    Returns:
+        str: path до картинки
+    """
+    color = (219,73,44)
+    data = np.zeros((256,256,3), dtype=np.uint8)
+    for i in range(256):
+        for j in range(256):
+            data[i,j] = [color[0] * (arr[i][j]/255), color[1] * (arr[i][j]/255), color[2] * (arr[i][j]/255)]
+    image = Image.fromarray(data)      # Create a PIL image
+    image.save(f"images/{name}.png")
+    image.show()
+        
 
 if __name__ == "__main__":
     file = open("dump.txt").readlines()
