@@ -24,9 +24,7 @@ gui.add(api, 'show_spheres')
 gui.onChange((_) => initMesh(api));
 
 async function get_stations() {
-  const json_data = await fetch('/stations');
-  const data = await data.json();
-  return data;
+  return [];
 }
 
 async function get_data() {
@@ -97,9 +95,9 @@ function initMesh(options) {
   for (let e in api_data) {
     let block = api_data[e]['message']['data'];
     let new_block = [];
-    for (let j = 0; j < 64; j+=2) {
+    for (let j = 0; j < 64; j+=4) {
       let new_row = [];
-      for (let k = 0; k < 64; k+=2) {
+      for (let k = 0; k < 64; k+=4) {
         new_row.push(block[j][k]);
       }
       new_block.push(new_row);
@@ -113,7 +111,7 @@ function initMesh(options) {
     for (let row of data[block]) {
       let x = 0;
       for (let height of row) {
-        place_tile(block_x * 32 + x, block_y * 32 + y, height);
+        place_tile(block_x * 16 + x, block_y * 16 + y, height);
         x++;
       }
       y++;
@@ -124,11 +122,10 @@ function initMesh(options) {
 
   if(options.show_modules) {
     for(let [x,y] of modules) {
-      let xx = Math.floor(x / 2), yy = Math.floor(y / 2);
-      place_module(xx, yy, data[Math.floor(xx / 32) + Math.floor(yy / 32) * 4][yy % 32][xx % 32]);
+      let xx = Math.floor(x / 4), yy = Math.floor(y / 4);
+      place_module(xx, yy, data[Math.floor(xx / 16) + Math.floor(yy / 16) * 4][yy % 16][xx % 16]);
     }
   }
-
   if(options.show_stations) {
     for(let s of stations) {
       let xx = Math.floor(s.coords[0] / 2),

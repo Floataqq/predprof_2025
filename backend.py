@@ -53,6 +53,7 @@ def get_stations(api_url):
     data = get_coords(api_url)
     response = getversh(data["listener"][0], data["listener"][1], data["sender"][0], data["sender"][1], 0, 1)
     return response
-visualise("https://olimp.miet.ru/ppo_it/api")
-do_map()
-add_all_tiles_to_bd()
+
+# visualise("https://olimp.miet.ru/ppo_it/api")
+# do_map()
+# add_all_tiles_to_bd()

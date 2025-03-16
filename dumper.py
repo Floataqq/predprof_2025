@@ -12,4 +12,3 @@ def dumper(api_url):
             tiles.add(hash)
             print(f"Got {len(tiles)} tiles...")
 
-
