@@ -141,7 +141,7 @@ def get(v):
 def p(x1,y1,x2,y2):
     return ((x1-x2)**2+(y1-y2)**2)**0.5
 
-def getversh(x1,y1,x2,y2,a,b):
+def getversh(x1,y1,x2,y2,a,b,v):
     ans=[]
     u=64
     while x1!=x2 or y1!=y2:
@@ -149,7 +149,7 @@ def getversh(x1,y1,x2,y2,a,b):
         y3=y1
         for i in range(-u,u+1):
             for j in range(-u,u+1):
-                if p(0,0,i,j)<=64:
+                if (i*i+j*j+v[i+x1][j+y1]*v[i+x1][j+y1])**0.5<=64:
                     x4=i+x1
                     y4=j+y1
                     if p(x4,y4,x2,y2)<=p(x3,y3,x2,y2):
