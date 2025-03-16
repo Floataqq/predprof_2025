@@ -1,5 +1,3 @@
-from flask import session
-from sqlalchemy import _or, _and
 from __init__db import *
 
 
@@ -28,40 +26,36 @@ def get_all_stations() -> list:
     session = next(get_db())
     return session.query(station).all()
 
-def add_tile1(string_value: str, up_id: int, left_id: int) -> int:
+def add_tile1(string_value: str, num: int) -> int:
     """
     :param string_value: str
-    :param up_id: int
-    :param left_id: int
+    :param num: int
     :return: id_of_current: int
     """
     session = next(get_db())
     new_tile = tile(
-        left_id=left_id,
-        up_id=up_id,
+        num=num,
         json=string_value
     )
     session.add(new_tile)
     session.commit()
-    cur_id = session.query(tile).filter(_and(left_id = left_id, up_id = up_id)).first().id
+    cur_id = session.query(tile).filter(num=num).first().id
     return cur_id
 
-def add_tile2(string_value: str, up_id: int, left_id: int) -> int:
+def add_tile2(string_value: str, num: int) -> int:
     """
     :param string_value: str
-    :param up_id: int
-    :param left_id: int
+    :param num: int
     :return: id_of_current: int
     """
     session = next(get_db())
     new_tile = tile(
-        left_id=left_id,
-        up_id=up_id,
+        num=num,
         json=string_value
     )
     session.add(new_tile)
     session.commit()
-    cur_id = session.query(tile).filter(_and(left_id = left_id, up_id =up_id)).first().id
+    cur_id = session.query(tile).filter(num=num).first().id
     arr = [[int(j) for j in i[1:-1].split(', ')] for i in string_value[1:-1].split('], [')]
     for i in range(len(arr)):
         for j in range(len(arr[i])):
@@ -74,7 +68,7 @@ def add_tile2(string_value: str, up_id: int, left_id: int) -> int:
     session.commit()
     return cur_id
 
-def get_tile_1(tile_id: int) -> tile:
+def get_tile1(tile_id: int) -> tile:
     """
     :param tile_id: int
     :return: list
@@ -82,7 +76,7 @@ def get_tile_1(tile_id: int) -> tile:
     session = next(get_db())
     return session.query(tile).filter_by(id=tile_id).first()
 
-def get_tile_2(tile_id: int) -> list:
+def get_tile2(tile_id: int) -> list:
     """
     :param tile_id: int
     :return: list[User, list[list[int]]]
@@ -90,7 +84,7 @@ def get_tile_2(tile_id: int) -> list:
     session = next(get_db())
     res_tile = session.query(tile).filter_by(id = tile_id).first()
     res_points = session.query(point).filter(point.tile_id == res_tile.id).order_by(point.num).all()
-    res = [[0 for j in range(64)] for i in range(64)]
+    res = [[0 for _ in range(64)] for _ in range(64)]
     for pt in res_points:
         res[pt.num // 64][pt.num % 64] = pt.mean
     result = [res_tile, res]

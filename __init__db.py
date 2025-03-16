@@ -15,8 +15,7 @@ Base = declarative_base()
 class tile(Base):
     __tablename__ = 'tiles'
     id = Column(Integer, primary_key=True, autoincrement=True)
-    left_id = Column(Integer, nullable=True)
-    up_id = Column(Integer, nullable=True)
+    num = Column(Integer, nullable=True)
     point = relationship('points', back_populates='tiles')
     json = Column(String(10 ** 5), nullable=True)
 
