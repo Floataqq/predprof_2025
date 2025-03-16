@@ -1,101 +1,103 @@
-def lol(i, j, v, used, ans, ioi, op):
-    if i == 2:
-        cnt = 0
+def lol(i,j,v,used,ans,ioi,op):
+    if i==2:
+        cnt=0
         for i in range(4):
             for j in range(3):
                 for jkl in range(64):
-                    cnt += abs(v[ans[i][j]][jkl][-1] - v[ans[i][j + 1]][jkl][0])
-                    cnt += abs(v[ans[j][i]][-1][jkl] - v[ans[j + 1][i]][0][jkl])
-        if cnt < op:
-            ioi = ans
-            op = cnt
-        return
-    i1 = i
-    j1 = j + 1
-    if j1 == 2:
-        j1 = 0
-        i1 += 1
+                    cnt+=abs(v[ans[i][j]][jkl][-1]-v[ans[i][j+1]][jkl][0])
+                    cnt+=abs(v[ans[j][i]][-1][jkl]-v[ans[j+1][i]][0][jkl])
+        if cnt<op:
+            ioi=ans
+            op=cnt
+        return op
+    i1=i
+    j1=j+1
+    if j1==2:
+        j1=0
+        i1+=1
     for o in range(16):
-        if used[o] == 0:
-            used[o] = 1
-            ans[i][j] = o
-            lol(i1, j1, v, used, ans, ioi, op)
+        if used[o]==0:
+            used[o]=1
+            ans[i][j]=o
+            op=min(op,lol(i1,j1,v,used,ans,ioi,op))
+            used[o]=0
+    return op
 
 
 def get(v):
-    ans = [[-1 for _ in range(4)] for __ in range(4)]
-    used = [0 for i in range(16)]
+    ans=[[-1 for _ in range(4)]for __ in range(4)]
+    used=[0 for i in range(16)]
     for i in range(16):
-        ok1 = 1
-        ok2 = 1
-        ok3 = 1
-        ok4 = 1
+        ok1=1
+        ok2=1
+        ok3=1
+        ok4=1
         for j in range(64):
-            if v[i][0][j] != 255:
-                ok1 = 0
+            if v[i][0][j]!=255:
+                ok1=0
                 break
         for j in range(64):
-            if v[i][j][0] != 255:
-                ok2 = 0
+            if v[i][j][0]!=255:
+                ok2=0
                 break
         for j in range(64):
-            if v[i][-1][j] != 255:
-                ok3 = 0
+            if v[i][-1][j]!=255:
+                ok3=0
                 break
         for j in range(64):
-            if v[i][j][-1] != 255:
-                ok4 = 0
+            if v[i][j][-1]!=255:
+                ok4=0
                 break
-        if ok1 == 1 and ok2 == 1:
-            used[i] = 1
-            ans[0][0] = i
-        elif ok1 == 1 and ok4 == 1:
-            ans[0][3] = i
-            used[i] = 1
-        elif ok2 == 1 and ok3 == 1:
-            ans[3][0] = i
-            used[i] = 1
-        elif ok3 == 1 and ok4 == 1:
-            ans[3][3] = i
-            used[i] = 1
-        elif ok1 == 1:
-            if ans[0][1] == -1:
-                ans[0][1] = i
-                used[i] = 1
+        if ok1==1 and ok2==1:
+            used[i]=1
+            ans[0][0]=i
+        elif ok1==1 and ok4==1:
+            ans[0][3]=i
+            used[i]=1
+        elif ok2==1 and ok3==1:
+            ans[3][0]=i
+            used[i]=1
+        elif ok3==1 and ok4==1:
+            ans[3][3]=i
+            used[i]=1
+        elif ok1==1:
+            if ans[0][1]==-1:
+                ans[0][1]=i
+                used[i]=1
+            else :
+                ans[0][2]=i
+                used[i]=1
+        elif ok2==1:
+            if ans[1][0]==-1:
+                ans[1][0]=i
+                used[i]=1
             else:
-                ans[0][2] = i
-                used[i] = 1
-        elif ok2 == 1:
-            if ans[1][0] == -1:
-                ans[1][0] = i
-                used[i] = 1
+                ans[2][0]=i
+                used[i]=1
+        elif ok3==1:
+            if ans[3][1]==-1:
+                ans[3][1]=i
+                used[i]=1
             else:
-                ans[2][0] = i
-                used[i] = 1
-        elif ok3 == 1:
-            if ans[3][1] == -1:
-                ans[3][1] = i
-                used[i] = 1
+                ans[3][2]=i
+                used[i]=1
+        elif ok4==1:
+            if ans[1][3]==-1:
+                ans[1][3]=i
+                used[i]=1
             else:
-                ans[3][2] = i
-                used[i] = 1
-        elif ok4 == 1:
-            if ans[1][3] == -1:
-                ans[1][3] = i
-                used[i] = 1
-            else:
-                ans[2][3] = i
-                used[i] = 1
-    cnt1 = 0
+                ans[2][3]=i
+                used[i]=1
+    cnt1=0
     for i in range(64):
-        cnt1 += abs(v[ans[0][1]][i][0] - v[ans[0][0]][i][-1])
+        cnt1+=abs(v[ans[0][1]][i][0]-v[ans[0][0]][i][-1])
         cnt1 += abs(v[ans[0][2]][i][0] - v[ans[0][1]][i][-1])
         cnt1 += abs(v[ans[0][3]][i][0] - v[ans[0][2]][i][-1])
         cnt1 -= abs(v[ans[0][2]][i][0] - v[ans[0][0]][i][-1])
         cnt1 -= abs(v[ans[0][1]][i][0] - v[ans[0][2]][i][-1])
         cnt1 -= abs(v[ans[0][3]][i][0] - v[ans[0][1]][i][-1])
-    if cnt1 < 0:
-        ans[0][1], ans[0][2] = ans[0][2], ans[0][1]
+    if cnt1<0:
+        ans[0][1],ans[0][2]=ans[0][2],ans[0][1]
     cnt1 = 0
     for i in range(64):
         cnt1 += abs(v[ans[-1][1]][i][0] - v[ans[-1][0]][i][-1])
@@ -106,16 +108,16 @@ def get(v):
         cnt1 -= abs(v[ans[-1][3]][i][0] - v[ans[-1][1]][i][-1])
     if cnt1 < 0:
         ans[-1][1], ans[-1][2] = ans[-1][2], ans[-1][1]
-    cnt1 = 0
+    cnt1=0
     for i in range(64):
-        cnt1 += abs(v[ans[1][0]][0][i] - v[ans[0][0]][-1][i])
+        cnt1+=abs(v[ans[1][0]][0][i]-v[ans[0][0]][-1][i])
         cnt1 += abs(v[ans[2][0]][0][i] - v[ans[1][0]][-1][i])
         cnt1 += abs(v[ans[3][0]][0][i] - v[ans[2][0]][-1][i])
         cnt1 -= abs(v[ans[2][0]][0][i] - v[ans[0][0]][-1][i])
         cnt1 -= abs(v[ans[1][0]][0][i] - v[ans[2][0]][-1][i])
         cnt1 -= abs(v[ans[3][0]][0][i] - v[ans[1][0]][-1][i])
-    if cnt1 < 0:
-        ans[2][0], ans[1][0] = ans[1][0], ans[2][0]
+    if cnt1<0:
+        ans[2][0],ans[1][0]=ans[1][0],ans[2][0]
     cnt1 = 0
     for i in range(64):
         cnt1 += abs(v[ans[1][-1]][0][i] - v[ans[0][-1]][-1][i])
@@ -126,7 +128,7 @@ def get(v):
         cnt1 -= abs(v[ans[3][-1]][0][i] - v[ans[1][-1]][-1][i])
     if cnt1 < 0:
         ans[2][-1], ans[1][-1] = ans[1][-1], ans[2][-1]
-    goodans = ans
-    cnt = 1000000000000000
-    lol(0, 0, v, used, ans, goodans, cnt)
+    goodans=ans
+    cnt=1000000000000000
+    lol(0,0,v,used,ans,goodans,cnt)
     return goodans
