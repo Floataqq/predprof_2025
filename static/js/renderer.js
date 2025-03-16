@@ -1,6 +1,20 @@
 import * as THREE from 'three';
 import { MapControls } from 'three/addons/controls/MapControls.js';
 import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js';
+import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+
+const api = {
+  show_modules: false,
+  show_stations: false,
+  show_spheres: false,
+};
+
+let modules = [], stations = [];
+
+let gui = new GUI();
+gui.add(api, 'show_modules')
+  .name('Show research modules')
+  .onChange(
 
 async function get_data() {
   const json_data = await fetch('/data');
@@ -11,7 +25,7 @@ async function get_data() {
 async function get_stations() {
   const json_data = await fetch('/coords');
   const data = await json_data.json();
-  return data;
+  return [data.sender, data.listener];
 }
 
 const scene = new THREE.Scene();
@@ -20,7 +34,7 @@ const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.inner
 const renderer = new THREE.WebGLRenderer();
 const controls = new MapControls(camera, renderer.domElement);
 const tiles = [];
-controls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
+controls.enableDamping = true; 
 controls.dampingFactor = 0.05;
 
 controls.screenSpacePanning = false;
@@ -40,7 +54,6 @@ function normalize(c, factor) {
 function place_tile(x, y, height) {
   const geometry = new THREE.BoxGeometry( 1, 5 * height / 255, 1 );
   geometry.translate(x, 5 * height / 255 / 2, y);
-  // tiles.push(geometry);
   const color = normalize(0xdb, height) * 0x10000 + normalize(0x42, height) * 0x100 + normalize(0x2c, height);
   const material = new THREE.MeshBasicMaterial( { color } );
   const tile = new THREE.Mesh( geometry, material );
@@ -52,42 +65,39 @@ function animate() {
   renderer.render(scene, camera);
 }
 
-const api_data = await get_data();
-let data = [];
-for (let e in api_data) {
-  let block = api_data[e]['message']['data'];
-  let new_block = [];
-  for (let j = 0; j < 64; j+=2) {
-    let new_row = [];
-    for (let k = 0; k < 64; k+=2) {
-      new_row.push(block[j][k]);
+function initMesh() {
+  const api_data = await get_data();
+  let data = [];
+  for (let e in api_data) {
+    let block = api_data[e]['message']['data'];
+    let new_block = [];
+    for (let j = 0; j < 64; j+=2) {
+      let new_row = [];
+      for (let k = 0; k < 64; k+=2) {
+        new_row.push(block[j][k]);
+      }
+      new_block.push(new_row);
     }
-    new_block.push(new_row);
+    data.push(new_block);
   }
-  data.push(new_block);
+
+  let block_x = 0, block_y = 0;
+  for (let block in data) {
+    let y = 0;
+    for (let row of data[block]) {
+      let x = 0;
+      for (let height of row) {
+        place_tile(block_x * 32 + x, block_y * 32 + y, height);
+        x++;
+      }
+      y++;
+    }
+    block_x++;
+    if (block_x % 4 == 0) { block_y += 1; block_x = 0; }
+  }
 }
 
-console.log(data);
-
-let block_x = 0, block_y = 0;
-for (let block in data) {
-  let y = 0;
-  for (let row of data[block]) {
-    let x = 0;
-    for (let height of row) {
-      place_tile(block_x * 32 + x, block_y * 32 + y, height);
-      x++;
-    }
-    y++;
-  }
-  block_x++;
-  if (block_x % 4 == 0) { block_y += 1; block_x = 0; }
-}
-
-// const geom = BufferGeometryUtils.mergeGeometries(tiles);
-// const material = new THREE.MeshNormalMaterial();
-// scene.add(new THREE.Mesh(geom, material));
-
+initMesh();
 renderer.setAnimationLoop(animate);
 
 function onWindowResize() {
