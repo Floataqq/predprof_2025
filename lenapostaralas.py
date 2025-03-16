@@ -1,5 +1,6 @@
 def lol(i,j,v,used,ans,ioi,op):
-    if i==2:
+
+    if i==3:
         cnt=0
         for i in range(4):
             for j in range(3):
@@ -12,8 +13,8 @@ def lol(i,j,v,used,ans,ioi,op):
         return op
     i1=i
     j1=j+1
-    if j1==2:
-        j1=0
+    if j1==3:
+        j1=1
         i1+=1
     for o in range(16):
         if used[o]==0:
@@ -130,5 +131,5 @@ def get(v):
         ans[2][-1], ans[1][-1] = ans[1][-1], ans[2][-1]
     goodans=ans
     cnt=1000000000000000
-    lol(0,0,v,used,ans,goodans,cnt)
+    lol(1,1,v,used,ans,goodans,cnt)
     return goodans
