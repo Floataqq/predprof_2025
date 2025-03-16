@@ -5,8 +5,8 @@ def lol(i,j,v,used,ans,ioi,op):
         for i in range(4):
             for j in range(3):
                 for jkl in range(64):
-                    cnt+=abs(v[ans[i][j]][jkl][-1]-v[ans[i][j+1]][jkl][0])
-                    cnt+=abs(v[ans[j][i]][-1][jkl]-v[ans[j+1][i]][0][jkl])
+                    cnt=max(cnt,abs(v[ans[i][j]][jkl][-1]-v[ans[i][j+1]][jkl][0]))
+                    cnt=max(cnt,abs(v[ans[j][i]][-1][jkl]-v[ans[j+1][i]][0][jkl]))
         if cnt<op:
             ioi=ans
             op=cnt
