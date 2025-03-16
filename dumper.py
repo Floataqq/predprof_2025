@@ -9,7 +9,7 @@ with open("dump.txt", 'w+') as f:
         resp = requests.get(base_url)
         hash = hashlib.md5(resp.text.encode()).hexdigest()
         if hash not in tiles:
-            f.write(resp.text + '\n')
+            f.write(resp.text)
         tiles.add(hash)
         print(f"Got {len(tiles)} tiles...")
 
