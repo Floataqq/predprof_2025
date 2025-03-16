@@ -5,8 +5,8 @@ def lol(i,j,v,used,ans,ioi,op):
         for i in range(4):
             for j in range(3):
                 for jkl in range(64):
-                    cnt=max(cnt,abs(v[ans[i][j]][jkl][-1]-v[ans[i][j+1]][jkl][0]))
-                    cnt=max(cnt,abs(v[ans[j][i]][-1][jkl]-v[ans[j+1][i]][0][jkl]))
+                    cnt+=abs(v[ans[i][j]][jkl][-1]-v[ans[i][j+1]][jkl][0])
+                    cnt+=abs(v[ans[j][i]][-1][jkl]-v[ans[j+1][i]][0][jkl])
         if cnt<op:
             ioi=ans
             op=cnt
@@ -97,7 +97,7 @@ def get(v):
         cnt1 -= abs(v[ans[0][2]][i][0] - v[ans[0][0]][i][-1])
         cnt1 -= abs(v[ans[0][1]][i][0] - v[ans[0][2]][i][-1])
         cnt1 -= abs(v[ans[0][3]][i][0] - v[ans[0][1]][i][-1])
-    if cnt1<0:
+    if cnt1>0:
         ans[0][1],ans[0][2]=ans[0][2],ans[0][1]
     cnt1 = 0
     for i in range(64):
@@ -107,7 +107,7 @@ def get(v):
         cnt1 -= abs(v[ans[-1][2]][i][0] - v[ans[-1][0]][i][-1])
         cnt1 -= abs(v[ans[-1][1]][i][0] - v[ans[-1][2]][i][-1])
         cnt1 -= abs(v[ans[-1][3]][i][0] - v[ans[-1][1]][i][-1])
-    if cnt1 < 0:
+    if cnt1 > 0:
         ans[-1][1], ans[-1][2] = ans[-1][2], ans[-1][1]
     cnt1=0
     for i in range(64):
@@ -117,7 +117,7 @@ def get(v):
         cnt1 -= abs(v[ans[2][0]][0][i] - v[ans[0][0]][-1][i])
         cnt1 -= abs(v[ans[1][0]][0][i] - v[ans[2][0]][-1][i])
         cnt1 -= abs(v[ans[3][0]][0][i] - v[ans[1][0]][-1][i])
-    if cnt1<0:
+    if cnt1>0:
         ans[2][0],ans[1][0]=ans[1][0],ans[2][0]
     cnt1 = 0
     for i in range(64):
@@ -127,7 +127,7 @@ def get(v):
         cnt1 -= abs(v[ans[2][-1]][0][i] - v[ans[0][-1]][-1][i])
         cnt1 -= abs(v[ans[1][-1]][0][i] - v[ans[2][-1]][-1][i])
         cnt1 -= abs(v[ans[3][-1]][0][i] - v[ans[1][-1]][-1][i])
-    if cnt1 < 0:
+    if cnt1 > 0:
         ans[2][-1], ans[1][-1] = ans[1][-1], ans[2][-1]
     goodans=ans
     cnt=1000000000000000
