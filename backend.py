@@ -21,15 +21,21 @@ def do_map():
         data.append(e["message"]["data"])
     __temp = get(data)
     order = [__temp[i // 4][i % 4] for i in range(16)]
+    print(order)
     returnformax = [data[order[_]] for _ in range(16)]
+    qqqq = [len(xxxx) for xxxx in returnformax]
+    print(qqqq)
     arr = [[0 for _ in range(256)] for __ in range(256)]
     for ind in range(16):
         for i in range(64):
             for j in range(64):
                 arr[64 * (ind // 4) + i][64 * (ind % 4) + j] = data[order[ind]][i][j]
+    for q, _ in getversh(53,202,199,5,1,1,arr):
+        xx,yy = q
+        arr[xx][yy] = -1
     arr[53][202] = -1
     arr[199][5] = -1
-    visualizze(arr, "goida")
+    visualizze(arr, "2dd")
     return [returnformax, order]
 
 def add_all_tiles_to_bd():
@@ -47,5 +53,6 @@ def get_stations(api_url):
     data = get_coords(api_url)
     response = getversh(data["listener"][0], data["listener"][1], data["sender"][0], data["sender"][1], 0, 1)
     return response
-# visualise("https://olimp.miet.ru/ppo_it/api")
+visualise("https://olimp.miet.ru/ppo_it/api")
+do_map()
 add_all_tiles_to_bd()
