@@ -1,7 +1,9 @@
-import numpy as np
+#import numpy as np
 from PIL import Image
 import json
 def visualize(arr: list[list[int]], name: str) -> str:
+    ...
+    '''
     """Функция, которая возвращает картинку.
 
     Args:
@@ -18,7 +20,10 @@ def visualize(arr: list[list[int]], name: str) -> str:
     image = Image.fromarray(data)      # Create a PIL image
     image.save(f"images/{name}.png")
     # image.show()
+    '''
 def visualizze(arr: list[list[int]], name: str) -> str:
+    ...
+    '''
     """Функция, которая возвращает картинку.
 
     Args:
@@ -38,10 +43,11 @@ def visualizze(arr: list[list[int]], name: str) -> str:
     image = Image.fromarray(data)      # Create a PIL image
     image.save(f"images/{name}.png")
     image.show()
-        
-
+    '''
+'''
 if __name__ == "__main__":
     file = open("dump.txt").readlines()
     for x in range(16):
         e = json.loads(file[x])
         visualize(e["message"]["data"], f"{x}")
+'''

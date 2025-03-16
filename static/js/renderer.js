@@ -23,9 +23,16 @@ gui.add(api, 'show_spheres')
   .onChange((v) => api.show_spheres = v);
 gui.onChange((_) => initMesh(api));
 
+async function get_stations() {
+  const json_data = await fetch('/stations');
+  const data = await data.json();
+  return data;
+}
+
 async function get_data() {
   const json_data = await fetch('/data');
   const data = await json_data.json();
+  console.log(data);
   return data;
 }
 
@@ -82,6 +89,8 @@ function animate() {
 
 api_data = await get_data();
 modules = await get_modules();
+stations = await get_stations();
+
 function initMesh(options) {
   console.log(options);
   let data = [];
@@ -117,6 +126,19 @@ function initMesh(options) {
     for(let [x,y] of modules) {
       let xx = Math.floor(x / 2), yy = Math.floor(y / 2);
       place_module(xx, yy, data[Math.floor(xx / 32) + Math.floor(yy / 32) * 4][yy % 32][xx % 32]);
+    }
+  }
+
+  if(options.show_stations) {
+    for(let s of stations) {
+      let xx = Math.floor(s.coords[0] / 2),
+          yy = Math.floor(s.coords[1] / 2);
+      place_module(xx, yy, data[Math.floor(xx / 32) + Math.floor(yy / 32) * 4][yy % 32][xx % 32]);
+      if (options.show_spheres) {
+        let geom = new THREE.SphereGeometry((s.type + 1) * 32, 32, 16);
+          const material = new THREE.MeshBasicMaterial( { color: 0xffff00, opacity: 0.3 });
+
+      }
     }
   }
 }
