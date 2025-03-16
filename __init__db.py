@@ -13,22 +13,22 @@ engine = create_engine(database_url)
 Base = declarative_base()
 
 class tile(Base):
-    __tablename__ = 'tiles'
+    __tablename__ = 'tile'
     id = Column(Integer, primary_key=True, autoincrement=True)
     num = Column(Integer, nullable=True)
-    point = relationship('points', back_populates='tiles')
+    point = relationship('point', back_populates='tile')
     json = Column(String(10 ** 5), nullable=True)
 
 class point(Base):
-    __tablename__ = 'points'
+    __tablename__ = 'point'
     id = Column(Integer, primary_key=True, autoincrement=True)
-    tile_id = Column(Integer, ForeignKey('Tiles.id'))
-    tile = relationship('tiles', back_populates='points')
+    tile_id = Column(Integer, ForeignKey('tile.id'))
+    tile = relationship('tile', back_populates='point')
     num = Column(Integer, nullable=False)
     mean = Column(Integer, nullable=False)
 
 class station(Base):
-    __tablename__ = 'stations'
+    __tablename__ = 'station'
     id = Column(Integer, primary_key=True, autoincrement=True)
     x = Column(Integer, nullable=False)
     y = Column(Integer, nullable=False)
@@ -36,7 +36,7 @@ class station(Base):
     radius = Column(Integer, nullable=False)
 
 class base_point(Base):
-    __tablename__ = 'base_points'
+    __tablename__ = 'base_point'
     id = Column(Integer, primary_key=True, autoincrement=True)
     x = Column(Integer, nullable=False)
     y = Column(Integer, nullable=False)
