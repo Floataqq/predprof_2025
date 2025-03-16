@@ -2,7 +2,6 @@ import json
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from __init__db import User
 from db_functions import add_user, is_existing, is_confirmed, set_confirmed, is_password_correct
-from dumper import dumper
 from backend import visualise
 
 app = Flask(__name__)
