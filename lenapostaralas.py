@@ -137,3 +137,22 @@ def get(v):
     cnt=1000000000000000
     lol(1,1,v,used,ans,goodans,cnt)
     return goodans
+
+def p(x1,y1,x2,y2):
+    return ((x1-x2)**2+(y1-y2)**2)**0.5
+
+def getversh(x1,y1,x2,y2,a,b):
+    ans=[]
+    while x1!=x2 or y1!=y2:
+        x3=x1
+        y3=y1
+        for i in range(-64,65):
+            for j in range(-64,65):
+                if (i*i+j*j)**0.5<=64:
+                    x4=i+x1
+                    y4=j+y1
+                    if p(x1,y1,x4,y4)+p(x4,y4,x2,y2)<=p(x1,y1,x3,y3)+p(x3,y3,x2,y2):
+                        x3=x4
+                        y3=y4
+        ans.append([x3,y3])
+    return ans
