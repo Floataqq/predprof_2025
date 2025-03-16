@@ -3,8 +3,14 @@ import { MapControls } from 'three/addons/controls/MapControls.js';
 import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js';
 
 async function get_data() {
-  const json_data = await fetch('/data')
-  const data = await json_data.json()
+  const json_data = await fetch('/data');
+  const data = await json_data.json();
+  return data;
+}
+
+async function get_stations() {
+  const json_data = await fetch('/coords');
+  const data = await json_data.json();
   return data;
 }
 

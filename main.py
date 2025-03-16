@@ -1,4 +1,5 @@
 import json
+import api
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 #
 # from db_functions import add_user, is_existing, is_confirmed, set_confirmed, is_password_correct
@@ -24,6 +25,12 @@ def index():
         api_url = request.form["api_url"]
         visualise(api_url)
     return render_template("3d.html")
+
+@app.route("/coords")
+def coords():
+    api_url = request.args.get("api_url") or \
+        "https://olimp.miet.ru/ppo_it/api"
+    return api.get_coords(api_url)
 
 @app.route("/data")
 def give_tiles():

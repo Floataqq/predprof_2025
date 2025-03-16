@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, Integer, String, ForeignKey
+from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Boolean
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, foreign, relationship
 import os
@@ -40,6 +40,7 @@ class base_point(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     x = Column(Integer, nullable=False)
     y = Column(Integer, nullable=False)
+    is_listener = Column(Boolean, default=False)
 
 
 Base.metadata.create_all(engine)
