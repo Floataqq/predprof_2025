@@ -18,4 +18,6 @@ def do_map():
         data.append(e["message"]["data"])
     print(get(data))
 
+
+visualise('https://olimp.miet.ru/ppo_it/api')
 do_map()
