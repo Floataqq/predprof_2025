@@ -3,7 +3,7 @@ import api
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 #
 # from db_functions import add_user, is_existing, is_confirmed, set_confirmed, is_password_correct
-# from backend import visualise
+from backend import visualise, get_stations
 
 app = Flask(__name__)
 api_url = "https://olimp.miet.ru/ppo_it/api"
@@ -39,8 +39,9 @@ def give_tiles():
 
 @app.route("/stations")
 def stations():
-    #как-то берем вершины
-    data = []
+    api_url = request.args.get("api_url") or \
+              "https://olimp.miet.ru/ppo_it/api"
+    data = get_stations(api_url)
     response = []
     for i in data:
         d1 = dict()

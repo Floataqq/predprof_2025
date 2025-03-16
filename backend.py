@@ -1,7 +1,7 @@
 import json
 from dumper import dumper
 from __visualizer import visualize, visualizze
-from lenapostaralas import get
+from lenapostaralas import get, getversh
 from api import get_coords
 from db_functions import add_tile1, add_base_point
 from api import get_coords
@@ -43,6 +43,9 @@ def add_science_points(api_url):
     add_base_point(data["listener"][0], data["listener"][1], 0)
     add_base_point(data["sender"][0], data["sender"][1], 1)
 
-
+def get_stations(api_url):
+    data = get_coords(api_url)
+    response = getversh(data["listener"][0], data["listener"][1], data["sender"][0], data["sender"][1], 0, 1)
+    return response
 # visualise("https://olimp.miet.ru/ppo_it/api")
 add_all_tiles_to_bd()
