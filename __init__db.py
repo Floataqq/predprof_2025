@@ -1,9 +1,7 @@
-from sqlalchemy import create_engine, Column, Integer, String, DateTime, Boolean
+from sqlalchemy import create_engine, Column, Integer, String, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
-from datetime import datetime
+from sqlalchemy.orm import sessionmaker, foreign, relationship
 import os
-from werkzeug.security import generate_password_hash, check_password_hash
 
 
 if os.path.exists("Database.db"):
@@ -14,30 +12,41 @@ database_url = 'sqlite:///Database.db'
 engine = create_engine(database_url)
 Base = declarative_base()
 
-class User(Base):
-    __tablename__ = 'users'
+class tile(Base):
+    __tablename__ = 'tiles'
     id = Column(Integer, primary_key=True, autoincrement=True)
-    first_name = Column(String(100), unique=False, nullable=False)
-    last_name = Column(String(100), unique=False, nullable=True)
-    middle_name = Column(String(100), unique=False, nullable=True)
-    email = Column(String(100), unique=True, nullable=False)
-    created_at = Column(DateTime, unique=False, default=datetime.now)
-    is_admin = Column(Boolean, unique=False, default=False)
-    password_hash = Column(String(128), nullable=False)
-    confirmed = Column(Boolean, default=False)
-    avatar = Column(String(300), default=None)
+    left_id = Column(Integer, nullable=True)
+    up_id = Column(Integer, nullable=True)
+    point = relationship('points', back_populates='tiles')
+    json = Column(String(10 ** 5), nullable=True)
 
-    def set_password(self, password):
-        self.password_hash = generate_password_hash(password)
+class point(Base):
+    __tablename__ = 'points'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    tile_id = Column(Integer, ForeignKey('Tiles.id'))
+    tile = relationship('tiles', back_populates='points')
+    num = Column(Integer, nullable=False)
+    mean = Column(Integer, nullable=False)
 
-    def check_password(self, password):
-        return check_password_hash(self.password_hash, password)
+class station(Base):
+    __tablename__ = 'stations'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    x = Column(Integer, nullable=False)
+    y = Column(Integer, nullable=False)
+    price = Column(Integer, nullable=False)
+    radius = Column(Integer, nullable=False)
+
+class base_point(Base):
+    __tablename__ = 'base_points'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    x = Column(Integer, nullable=False)
+    y = Column(Integer, nullable=False)
+
 
 Base.metadata.create_all(engine)
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-# Функция для получения сессии
 def get_db():
     db = SessionLocal()
     try:

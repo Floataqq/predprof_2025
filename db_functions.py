@@ -1,79 +1,118 @@
+from flask import session
+from sqlalchemy import _or, _and
 from __init__db import *
 
-def get_all_users() -> list:
+
+def add_station(x: int, y: int, price: int, radius: int) -> None:
     """
-    :return: list[User]
+    :param x: int
+    :param y: int
+    :param price: int
+    :param radius: int
+    :return: None
     """
     session = next(get_db())
-    result = session.query(User).all()
+    new_station = station(
+        x = x,
+        y = y,
+        price = price,
+        radius = radius
+    )
+    session.add(new_station)
+    session.close()
+
+def get_all_stations() -> list:
+    """
+    :return: list[station]
+    """
+    session = next(get_db())
+    return session.query(station).all()
+
+def add_tile1(string_value: str, up_id: int, left_id: int) -> int:
+    """
+    :param string_value: str
+    :param up_id: int
+    :param left_id: int
+    :return: id_of_current: int
+    """
+    session = next(get_db())
+    new_tile = tile(
+        left_id=left_id,
+        up_id=up_id,
+        json=string_value
+    )
+    session.add(new_tile)
+    session.commit()
+    cur_id = session.query(tile).filter(_and(left_id = left_id, up_id = up_id)).first().id
+    return cur_id
+
+def add_tile2(string_value: str, up_id: int, left_id: int) -> int:
+    """
+    :param string_value: str
+    :param up_id: int
+    :param left_id: int
+    :return: id_of_current: int
+    """
+    session = next(get_db())
+    new_tile = tile(
+        left_id=left_id,
+        up_id=up_id,
+        json=string_value
+    )
+    session.add(new_tile)
+    session.commit()
+    cur_id = session.query(tile).filter(_and(left_id = left_id, up_id =up_id)).first().id
+    arr = [[int(j) for j in i[1:-1].split(', ')] for i in string_value[1:-1].split('], [')]
+    for i in range(len(arr)):
+        for j in range(len(arr[i])):
+            new_point = point(
+                tile_id=cur_id,
+                num=i * len(arr[i]) + j,
+                mean=arr[i][j]
+            )
+            session.add(new_point)
+    session.commit()
+    return cur_id
+
+def get_tile_1(tile_id: int) -> tile:
+    """
+    :param tile_id: int
+    :return: list
+    """
+    session = next(get_db())
+    return session.query(tile).filter_by(id=tile_id).first()
+
+def get_tile_2(tile_id: int) -> list:
+    """
+    :param tile_id: int
+    :return: list[User, list[list[int]]]
+    """
+    session = next(get_db())
+    res_tile = session.query(tile).filter_by(id = tile_id).first()
+    res_points = session.query(point).filter(point.tile_id == res_tile.id).order_by(point.num).all()
+    res = [[0 for j in range(64)] for i in range(64)]
+    for pt in res_points:
+        res[pt.num // 64][pt.num % 64] = pt.mean
+    result = [res_tile, res]
     return result
 
-def add_user(response: dict) -> None:
+def add_base_point(x: int, y: int) -> None:
     """
-    :param response: dict{name: str, surname: str, patronymic: str, email: str}
+    :param x: int
+    :param y: int
     :return: None
     """
     session = next(get_db())
-    new_user = User(
-        first_name=response['name'],
-        last_name=response['surname'],
-        middle_name = response['patronymic'],
-        email=response['email'],
-        is_admin=False,
-        confirmed = False,
+    new_base_point = base_point(
+        x = x,
+        y = y
     )
-    new_user.set_password(response['password'])
-    session.add(new_user)
+    session.add(new_base_point)
     session.commit()
 
-def is_confirmed(email: str) -> bool:
+def get_all_base_points() -> list:
     """
-    :param email: str
-    :return: bool
-    """
-    session = next(get_db())
-    user = session.query(User).filter_by(email=email).first()
-    return user.confirmed
-
-def is_existing(email: str) -> bool:
-    """
-    :param email: str
-    :return: bool
+    :return: list[base_point]
     """
     session = next(get_db())
-    user = session.query(User).filter_by(email=email).first()
-    if user:
-        return True
-    return False
-
-def set_confirmed(email: str) -> None:
-    """
-    :param email: str
-    :return: None
-    """
-    session = next(get_db())
-    user = session.query(User).filter_by(email=email).first()
-    user.confirmed = 1
-    session.commit()
-
-def is_password_correct(email: str, password: str) -> bool:
-    """
-    :param email: str
-    :param password: str
-    :return: Bool
-    """
-    session = next(get_db())
-    user = session.query(User).filter_by(email=email).first()
-    return user.check_password(password)
-
-def get_user_by_email(email: str) -> User:
-    """
-    :param email: str
-    :return: User()
-    """
-    session = next(get_db())
-    user = session.query(User).filter_by(email=email).first()
-    return user
-
-print(is_existing('nikolas.kravtsov@gmail.com'))
-
+    return session.query(base_point).all()
