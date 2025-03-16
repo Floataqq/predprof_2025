@@ -3,7 +3,7 @@ from itsdangerous import URLSafeTimedSerializer, SignatureExpired, BadTimeSignat
 from flask_mail import Mail, Message
 import os
 from __init__db import User
-from db_functions import add_user, is_existing, is_confirmed, set_confirmed, is_password_correct
+from db_functions import add_user, is_existing, is_confirmed, set_confirmed, is_password_correct, get_user_by_email
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -53,13 +53,14 @@ def index():
 
 @app.route('/dashboard')
 def dashboard():
+    user_data = get_user_by_email(session['email'])
     user = {
-        "last_name": "Иванов",
-        "first_name": "Иван",
-        "middle_name": "Иванович",
-        "email": "ivanov@mail.ru",
-        "id": "1",
-        "avatar": None
+        "last_name": user_data.last_name,
+        "first_name": user_data.first_name,
+        "middle_name": user_data.middle_name,
+        "email": user_data.email,
+        "id": user_data.id,
+        "avatar": user_data.avatar
     }
     return render_template('profile.html', user = user)
 

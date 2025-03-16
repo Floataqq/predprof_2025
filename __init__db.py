@@ -25,6 +25,7 @@ class User(Base):
     is_admin = Column(Boolean, unique=False, default=False)
     password_hash = Column(String(128), nullable=False)
     confirmed = Column(Boolean, default=False)
+    avatar = Column(String(300), default=None)
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)

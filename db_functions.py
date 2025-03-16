@@ -58,12 +58,22 @@ def set_confirmed(email: str) -> None:
 
 def is_password_correct(email: str, password: str) -> bool:
     """
-    :param email: str, password: str
+    :param email: str
+    :param password: str
     :return: Bool
     """
     session = next(get_db())
     user = session.query(User).filter_by(email=email).first()
     return user.check_password(password)
+
+def get_user_by_email(email: str) -> User:
+    """
+    :param email: str
+    :return: User()
+    """
+    session = next(get_db())
+    user = session.query(User).filter_by(email=email).first()
+    return user
 
 print(is_existing('nikolas.kravtsov@gmail.com'))
 
