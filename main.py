@@ -45,8 +45,8 @@ def stations():
     response = []
     for i in data:
         d1 = dict()
-        d1["cords"] = data[0]
-        d1["type"] = data[1]
+        d1["cords"] = i[0]
+        d1["type"] = i[1]
         response.append(d1)
     return response
 
