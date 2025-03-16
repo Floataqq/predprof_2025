@@ -141,19 +141,7 @@ def get(v):
 def p(x1,y1,x2,y2):
     return ((x1-x2)**2+(y1-y2)**2)**0.5
 
-def jkl(x1,y1,x2,y2,v,u):
-    x3 = x1
-    y3 = y1
-    for i in range(-u, u + 1):
-        for j in range(-u, u + 1):
-            if 0 <= x1 + i < 256 and 0 <= y1 + j < 256:
-                if (i * i + j * j + (v[i + x1][j + y1] - v[x1][y1]) * (v[i + x1][j + y1] - v[x1][y1])) ** 0.5 <= 64:
-                    x4 = i + x1
-                    y4 = j + y1
-                    if p(x4, y4, x2, y2) <= p(x3, y3, x2, y2):
-                        x3 = x4
-                        y3 = y4
-    return [x3,y3]
+
 
 def getversh(x1,y1,x2,y2,a,b,v):
     x0=x1
@@ -161,8 +149,19 @@ def getversh(x1,y1,x2,y2,a,b,v):
     ans=[]
     u=64
     while x1!=x2 or y1!=y2:
-        a=jkl(x1,y1,x2,y2,v,64)
-        ans.append([a,1])
+        x3 = x1
+        y3 = y1
+        for i in range(-u, u + 1):
+            for j in range(-u, u + 1):
+                if 0 <= x1 + i < 256 and 0 <= y1 + j < 256:
+                    if (i * i + j * j + (v[i + x1][j + y1] - v[x1][y1]) * (v[i + x1][j + y1] - v[x1][y1])) ** 0.5 <= 64:
+                        x4 = i + x1
+                        y4 = j + y1
+                        if p(x4, y4, x2, y2) <= p(x3, y3, x2, y2):
+                            x3 = x4
+                            y3 = y4
+
+        ans.append([[x3,y3],1])
 
 
     return ans
