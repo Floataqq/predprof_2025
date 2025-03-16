@@ -155,4 +155,6 @@ def getversh(x1,y1,x2,y2,a,b):
                         x3=x4
                         y3=y4
         ans.append([x3,y3])
+        x1=x3
+        y1=y3
     return ans
