@@ -12,3 +12,5 @@ def get_coords(api_url):
     if resp['status'] != "ok":
         raise RuntimeError(f"Api return non-ok status `{resp['status']}` on /coords")
     return resp['message']
+
+print(get_coords('https://olimp.miet.ru/ppo_it/api'))

@@ -39,7 +39,7 @@ def add_tile1(string_value: str, num: int) -> int:
     )
     session.add(new_tile)
     session.commit()
-    cur_id = session.query(tile).filter(num=num).first().id
+    cur_id = session.query(tile).filter_by(num=num).first().id
     return cur_id
 
 def add_tile2(string_value: str, num: int) -> int:

@@ -3,6 +3,8 @@ from dumper import dumper
 from __visualizer import visualize, visualizze
 from lenapostaralas import get
 from api import get_coords
+from db_functions import add_tile1
+
 def visualise(api_url):
     dumper(api_url)
     file = open("dump.txt").readlines()
@@ -27,8 +29,15 @@ def do_map():
     arr[53][202] = -1
     arr[199][5] = -1
     visualizze(arr, "goida")
-    return returnformax
+    return [returnformax, order]
 
+def add_all_tiles_to_bd():
+    file = open("dump.txt").readlines()
+    order = do_map()[1]
+    for i in order:
+        add_tile1(file[i], i)
 
-visualise('https://olimp.miet.ru/ppo_it/api')
-do_map()
+def add_science_points():
+    pass
+
+add_all_tiles_to_bd()
